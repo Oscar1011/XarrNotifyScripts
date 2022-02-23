@@ -395,8 +395,8 @@ def download():
         msg = msg + 'E' + detail['episodenumbers'].zfill(2)
     if detail['quality']:
         msg += '\n视频质量：' + detail['quality']
-    if detail['isupgrade']:
-        msg += '\n格式升级：' + '是' if bool(detail['isupgrade']) else '否'
+    #if detail['isupgrade']:
+    #    msg += '\n格式升级：' + '是' if bool(detail['isupgrade']) else '否'
 
     if detail['id']:
         url = get_file_url(detail['id'])
