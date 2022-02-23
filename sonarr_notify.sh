@@ -1,2 +1,3 @@
 #!/bin/sh
-python3 /volume3/docker/notify_py/sonarr/sonarr_notify.py
+BASE_ROOT=$(cd "$(dirname "$0")";pwd)
+python3 "${$BASE_ROOT}/sonarr_notify.py"
