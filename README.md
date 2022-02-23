@@ -4,3 +4,6 @@
    同时需要安装python3依赖， 安装python3 后运行 pip3 install requests 进行依赖安装
 3. 将sonarr_notify.sh 和 sonarr_notify.py 脚本放置在同一目录下，.sh 文件中的路径请根据具体情况修改 （docker环境修改为docker中的py文件路径）
 4. 打开sonarr，在 settings -> connect 中添加一个 Custom Script。 运行文件选择 .sh 文件即可。
+
+# 效果展示
+![basic](https://github.com/Oscar1011/XarrNotifyScripts/blob/main/raw/20220223174102.png)
