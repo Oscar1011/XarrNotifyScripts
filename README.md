@@ -6,4 +6,4 @@
 4. 打开sonarr，在 settings -> connect 中添加一个 Custom Script。 运行文件选择 .sh 文件即可。
 
 # 效果展示
-![basic](https://github.com/Oscar1011/XarrNotifyScripts/blob/main/raw/20220223174102.png)
+![basic](https://gitee.com/oscar1011/raw/blob/master/20220223174102.png)
