@@ -361,9 +361,9 @@ def fill_msg_from_detail(detail):
         detail['title'] = info['title']
     if detail.get('title'):
         msg += '\n剧名：' + detail['title']
-        if detail['seasonnumber']:
+        if detail.get('seasonnumber'):
             msg = msg + ' S' + detail['seasonnumber'].zfill(2)
-        if detail['episodenumbers']:
+        if detail.get('episodenumbers'):
             msg = msg + 'E' + detail['episodenumbers'].zfill(2)
     if detail.get('quality'):
         msg += '\n视频质量：' + detail['quality']
