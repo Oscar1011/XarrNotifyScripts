@@ -310,6 +310,19 @@ class Smms:
             return None
 
 
+def get_info_from_imdb_id(imdb_id):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/'
+                      '537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
+    }
+    api_url = "https://movie.douban.com/j/subject_suggest?q="
+    req_url = api_url + imdb_id
+    try:
+        return requests.get(req_url, headers=headers).json()[0]
+    except Exception:
+        return None
+
+
 def get_env_value(key):
     if key in os.environ and os.environ[key]:
         return os.environ[key]
@@ -341,6 +354,32 @@ def get_file_url(series_id):
     return None
 
 
+def fill_msg_from_detail(detail):
+    msg = ''
+    if detail.get('imdbid'):
+        info = get_info_from_imdb_id(detail['imdbid'])
+        detail['title'] = info['title']
+    if detail.get('title'):
+        msg += '\n剧名：' + detail['title']
+        if detail['seasonnumber']:
+            msg = msg + ' S' + detail['seasonnumber'].zfill(2)
+        if detail['episodenumbers']:
+            msg = msg + 'E' + detail['episodenumbers'].zfill(2)
+    if detail.get('quality'):
+        msg += '\n视频质量：' + detail['quality']
+    if detail.get('size'):
+        msg += '\n视频大小：' + HRS(int(detail['size']))
+    if detail.get('path'):
+        msg += '\n文件路径：' + detail['path']
+    if detail.get('isupgrade'):
+        msg += '\n格式升级：' + ('是' if 'True' == detail['isupgrade'] else '否')
+    if detail.get('deletedfiles'):
+        msg += '\n删除文件：' + ('是' if 'True' == detail['deletedfiles'] else '否')
+    if detail.get('indexer'):
+        msg += '\n抓取自：' + detail['indexer']
+    return msg
+
+
 def grab():
     detail = {
         'id': os.environ.get('sonarr_series_id', None),
@@ -355,18 +394,8 @@ def grab():
         'torrent_title': os.environ.get('sonarr_release_title', None),
         'indexer': os.environ.get('sonarr_release_indexer', None),
     }
-    msg = '开始下载\n剧名：' + detail['title']
+    msg = '开始下载' + fill_msg_from_detail(detail)
     url = ''
-    if detail['seasonnumber']:
-        msg = msg + ' S' + detail['seasonnumber'].zfill(2)
-    if detail['episodenumbers']:
-        msg = msg + 'E' + detail['episodenumbers'].zfill(2)
-    if detail['quality']:
-        msg += '\n视频质量：' + detail['quality']
-    if detail['size']:
-        msg += '\n视频大小：' + HRS(int(detail['size']))
-    if detail['indexer']:
-        msg += '\n抓取自：  ' + detail['indexer']
     if detail['id']:
         url = get_file_url(detail['id'])
     if not url:
@@ -381,23 +410,14 @@ def download():
     detail = {
         'id': os.environ.get('sonarr_series_id', None),
         'title': os.environ.get('sonarr_series_title', None),
+        'imdbid': os.environ.get('sonarr_series_imdbid', None),
         'episodenumbers': os.environ.get('sonarr_episodefile_episodenumbers', None),
         'seasonnumber': os.environ.get('sonarr_episodefile_seasonnumber', None),
         'quality': os.environ.get('sonarr_episodefile_quality', None),
         'isupgrade': os.environ.get('sonarr_isupgrade', None),
     }
-
-    msg = '下载完成\n剧名：' + detail['title']
+    msg = '下载完成' + fill_msg_from_detail(detail)
     url = ''
-    if detail['seasonnumber']:
-        msg = msg + ' S' + detail['seasonnumber'].zfill(2)
-    if detail['episodenumbers']:
-        msg = msg + 'E' + detail['episodenumbers'].zfill(2)
-    if detail['quality']:
-        msg += '\n视频质量：' + detail['quality']
-    #if detail['isupgrade']:
-    #    msg += '\n格式升级：' + '是' if bool(detail['isupgrade']) else '否'
-
     if detail['id']:
         url = get_file_url(detail['id'])
     if not url:
@@ -424,21 +444,14 @@ def episode_deleted():
     detail = {
         'id': os.environ.get('sonarr_series_id', None),
         'title': os.environ.get('sonarr_series_title', None),
+        'imdbid': os.environ.get('sonarr_series_imdbid', None),
         'episodenumbers': os.environ.get('sonarr_episodefile_episodenumbers', None),
         'seasonnumber': os.environ.get('sonarr_episodefile_seasonnumber', None),
         'quality': os.environ.get('sonarr_episodefile_quality', None),
         'path': os.environ.get('sonarr_episodefile_path', None),
     }
-    msg = '文件已删除\n剧名：' + detail['title']
+    msg = '文件已删除' + fill_msg_from_detail(detail)
     url = ''
-    if detail['seasonnumber']:
-        msg = msg + ' S' + detail['seasonnumber'].zfill(2)
-    if detail['episodenumbers']:
-        msg = msg + 'E' + detail['episodenumbers'].zfill(2)
-    if detail['quality']:
-        msg += '\n视频质量：' + detail['quality']
-    if detail['path']:
-        msg += '\n文件路径：' + detail['path']
     if detail['id']:
         url = get_file_url(detail['id'])
     if not url:
@@ -452,15 +465,13 @@ def series_deleted():
     detail = {
         'id': os.environ.get('sonarr_series_id', None),
         'title': os.environ.get('sonarr_series_title', None),
+        'imdbid': os.environ.get('sonarr_series_imdbid', None),
         'path': os.environ.get('sonarr_series_path', None),
         'deletedfiles': os.environ.get('sonarr_series_deletedfiles', None),  # True or False
     }
-    msg = '剧集已删除\n剧名：' + detail['title']
+
+    msg = '剧集已删除' + fill_msg_from_detail(detail)
     url = ''
-    if detail['path']:
-        msg += '\n路径：' + detail['path']
-    if detail['deletedfiles']:
-        msg += '\n删除文件：' + '是' if bool(detail['deletedfiles']) else '否'
     if detail['id']:
         url = get_file_url(detail['id'])
     if not url:
