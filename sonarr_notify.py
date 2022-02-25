@@ -358,7 +358,8 @@ def fill_msg_from_detail(detail):
     msg = ''
     if detail.get('imdbid'):
         info = get_info_from_imdb_id(detail['imdbid'])
-        detail['title'] = info['title']
+        if info and info.get('title'):
+            detail['title'] = re.sub(r' 第\S{1,3}季', '', info['title'], count=1)
     if detail.get('title'):
         msg += '\n剧名：' + detail['title']
         if detail.get('seasonnumber'):
