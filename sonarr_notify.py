@@ -6,8 +6,9 @@ import requests
 
 # 企业微信应用的配置，仅需前4项，若第五项配置了仅在缓存图片未找到的情况下使用;配置参考http://note.youdao.com/s/HMiudGkb
 QYWX_AM = ''
-# 此为SONARR 里的缓存图片路径，找一下MediaCover 这个目录的位置即可，因为套件版目录和docker会不一样。暂时没想到什么方法自动获取。所以就手动配置下
-SONARR_PATH = '/volume2/@appstore/nzbdrone/var/.config/Sonarr/MediaCover/'
+# 套件版Sonarr可以不用配置SONARR_PATH，此为SONARR 里的缓存图片路径，docker 版路径一般是/config/MediaCover，找一下MediaCover这个目录的位置即可
+# 未配置正确的情况下推送没有剧集的图片
+SONARR_PATH = ''
 # 前往 https://sm.ms/ 注册帐号后填入 SMMS_ID 为用户名，SMMS_PSWD为密码， 免费空间5G
 SMMS_ID = ''
 SMMS_PSWD = ''
@@ -338,7 +339,11 @@ def HRS(size):
 
 
 def get_file_url(series_id):
-    dir_path = SONARR_PATH + series_id
+    if SONARR_PATH:
+        dir_path = SONARR_PATH + series_id
+    else:
+        dir_path = os.path.join(os.environ["HOME"], '.config/Sonarr/MediaCover/', series_id)
+
     if os.path.exists(dir_path):
         photo_name = 'fanart-180.jpg'
         if PHOTO_QUALITY == 1:
@@ -511,7 +516,7 @@ def default():
 
 
 def test():
-    wecom_app('测试', "Sonarr 测试数据")
+    wecom_app('测试', "Sonarr 测试数据\n" + str(os.environ))
 
 
 type_dict = {
@@ -530,4 +535,4 @@ if __name__ == '__main__':
         event_fun = type_dict.get(event_type, default)
         event_fun()
     else:
-        wecom_app('Sonarr', "未检测到参数，")
+        wecom_app('Sonarr', "未检测到参数.")
