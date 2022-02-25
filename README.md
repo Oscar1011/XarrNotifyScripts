@@ -6,7 +6,7 @@
 4. 打开sonarr，在 settings -> connect 中添加一个 Custom Script。 运行文件选择 .sh 文件即可。
 
 # 效果展示
-![basic](https://gitee.com/oscar1011/raw/raw/master/20220224234117.jpg)
+![basic](https://gitee.com/oscar1011/raw/raw/master/20220225171813.png)
 
 # 赞助支持
 ![basic](https://gitee.com/oscar1011/raw/raw/master/20220224162639.png)
