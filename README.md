@@ -5,6 +5,8 @@
 3. 将xarr_notify.sh 和 xarr_notify.py 脚本放置在同一目录下
 4. 打开sonarr，在 settings -> connect 中添加一个 Custom Script。 运行文件选择 xarr_notify.sh 文件即可。
    打开radarr，在 设置 -> 通知连接 中添加一个 Custom Script。 运行文件选择 xarr_notify.sh 文件即可。
+   
+python3 环境安装可以看仔老师的教程 https://post.smzdm.com/p/az324xxn
 
 # 效果展示
 ![basic](https://gitee.com/oscar1011/raw/raw/master/20220225171813.png)
