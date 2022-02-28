@@ -3,26 +3,24 @@ import os
 import re
 
 import requests
+import yaml
 
-# 企业微信应用的配置，仅需前4项，若第五项配置了仅在缓存图片未找到的情况下使用;配置参考http://note.youdao.com/s/HMiudGkb
-QYWX_AM = ''
-# 前往 https://sm.ms/ 注册帐号后填入 SMMS_ID 为用户名，SMMS_PSWD为密码， 免费空间5G
+# 请在 config.yml 文件中配置
+QYWX = ''
 SMMS_ID = ''
 SMMS_PSWD = ''
-# 推送的图片质量 1表示高质量, 2表示低质量。 高质量大概一张100KB， 低质量一张大概30KB。根据自己情况修改
 PHOTO_QUALITY = 1
-# 套件版Sonarr/Radarr可以不用配置，此为SONARR/Radarr 里的缓存图片路径，docker 版路径一般是/config/MediaCover，找一下MediaCover这个目录的位置即可
-# 未配置正确的情况下推送没有剧集的图片
 SONARR_PATH = ''
 RADARR_PATH = ''
+
 
 # 企业微信 APP 推送
 def wecom_app(title, content, media_url=''):
     try:
-        if not QYWX_AM:
+        if not QYWX:
             print("QYWX_AM 并未设置！！\n取消推送")
             return
-        QYWX_AM_AY = re.split(',', QYWX_AM)
+        QYWX_AM_AY = re.split(',', QYWX)
         if 4 < len(QYWX_AM_AY) > 5:
             print("QYWX_AM 设置错误！！\n取消推送")
             return
@@ -221,6 +219,27 @@ class Smms:
             return None
 
 
+def load_user_config():
+    global QYWX
+    global SMMS_ID
+    global SMMS_PSWD
+    global PHOTO_QUALITY
+    global SONARR_PATH
+    global RADARR_PATH
+    user_setting_filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.yml')
+    if os.path.exists(user_setting_filepath):
+        with open(user_setting_filepath, 'r', encoding='utf-8') as file:
+            user_config = yaml.safe_load(file)
+        QYWX = user_config['user']['qywx']
+        if not QYWX:
+            raise KeyError('未配置企业微信')
+        SMMS_ID = user_config['user']['smms_id']
+        SMMS_PSWD = user_config['user']['smms_pswd']
+        PHOTO_QUALITY = user_config['user']['photo_quality']
+        SONARR_PATH = user_config['sonarr']['sonarr_path']
+        RADARR_PATH = user_config['radarr']['radarr_path']
+
+
 def get_info_from_imdb_id(imdb_id):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/'
@@ -281,7 +300,7 @@ def fill_msg_from_detail(detail):
         if info and info.get('title'):
             detail['title'] = re.sub(r' 第\S{1,3}季', '', info['title'], count=1)
     if detail.get('title'):
-        msg += '：' + detail['title']
+        msg += ':' + detail['title']
         if detail.get('seasonnumber'):
             msg = msg + ' S' + detail['seasonnumber'].zfill(2)
         if detail.get('episodenumbers'):
@@ -486,6 +505,7 @@ class Radarr:
 
 
 if __name__ == '__main__':
+    load_user_config()
     if "sonarr_eventtype" in os.environ and os.environ["sonarr_eventtype"]:
         event_type = os.environ["sonarr_eventtype"]
         Sonarr().exec(event_type)
