@@ -281,7 +281,7 @@ def fill_msg_from_detail(detail):
         if info and info.get('title'):
             detail['title'] = re.sub(r' 第\S{1,3}季', '', info['title'], count=1)
     if detail.get('title'):
-        msg += '\n' + detail['title']
+        msg += '：' + detail['title']
         if detail.get('seasonnumber'):
             msg = msg + ' S' + detail['seasonnumber'].zfill(2)
         if detail.get('episodenumbers'):
@@ -456,6 +456,7 @@ class Radarr:
         detail = {
             'id': os.environ.get('radarr_movie_id', None),
             'title': os.environ.get('radarr_movie_title', None),
+            'imdbid': os.environ.get('radarr_movie_imdbid', None),
             'quality': os.environ.get('radarr_moviefile_quality', None),
         }
         msg = '下载完成' + fill_msg_from_detail(detail)
