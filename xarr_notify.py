@@ -300,7 +300,7 @@ def fill_msg_from_detail(detail):
         if info and info.get('title'):
             detail['title'] = re.sub(r' 第\S{1,3}季', '', info['title'], count=1)
     if detail.get('title'):
-        msg += ':' + detail['title']
+        msg += '：' + detail['title']
         if detail.get('seasonnumber'):
             msg = msg + ' S' + detail['seasonnumber'].zfill(2)
         if detail.get('episodenumbers'):
