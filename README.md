@@ -4,7 +4,7 @@
    同时需要安装python3依赖， 安装python3 后运行 pip3 install requests 进行依赖安装
 3. 将脚本和配置文件放置在同一目录下
 4. 打开sonarr，在 settings -> connect 中添加一个 Custom Script。 运行文件选择 xarr_notify.sh 文件即可。
-   打开radarr，在 设置 -> 通知连接 中添加一个 Custom Script。 运行文件选择 xarr_notify.sh 文件即可。
+5. 打开radarr，在 设置 -> 通知连接 中添加一个 Custom Script。 运行文件选择 xarr_notify.sh 文件即可。
    
 python3 环境安装可以看仔老师的教程 https://post.smzdm.com/p/az324xxn
 
