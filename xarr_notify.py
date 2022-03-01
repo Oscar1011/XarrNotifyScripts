@@ -273,10 +273,10 @@ def get_file_url(series_id, arr_type):
     dir_path = os.path.join(os.environ["HOME"], '.config', arr_type, 'MediaCover', series_id)
     if arr_type == 'Sonarr':
         if SONARR_PATH:
-            dir_path = SONARR_PATH + series_id
+            dir_path = os.path.join(SONARR_PATH, series_id)
     elif arr_type == 'Radarr':
         if RADARR_PATH:
-            dir_path = RADARR_PATH + series_id
+            dir_path = os.path.join(RADARR_PATH, series_id)
 
     if os.path.exists(dir_path):
         photo_name = 'fanart-180.jpg'
