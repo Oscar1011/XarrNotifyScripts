@@ -7,11 +7,11 @@ user:
   # 推送的图片质量 1表示高质量, 2表示低质量。 高质量大概一张100KB， 低质量一张大概30KB。根据自己情况修改
   photo_quality: 1
 sonarr:
-  # 套件版Sonarr/Radarr可以不用配置，此为SONARR 里的缓存图片路径，docker 版路径一般是/config/MediaCover，找一下MediaCover这个目录的位置即可
+  # 套件版Sonarr/Radarr可以不用配置，此为SONARR 里的缓存图片路径，docker 版路径一般是/config/MediaCover/，找一下MediaCover这个目录的位置即可
   # 未配置正确的情况下推送没有剧集的图片
   sonarr_path: ''
 radarr:
-  # 套件版Sonarr/Radarr可以不用配置，此为Radarr 里的缓存图片路径，docker 版路径一般是/config/MediaCover，找一下MediaCover这个目录的位置即可
+  # 套件版Sonarr/Radarr可以不用配置，此为Radarr 里的缓存图片路径，docker 版路径一般是/config/MediaCover/，找一下MediaCover这个目录的位置即可
   # 未配置正确的情况下推送没有剧集的图片
   radarr_path: ''
   
