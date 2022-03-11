@@ -294,19 +294,20 @@ def get_file_url(series_id, arr_type):
 
 
 def fill_msg_from_detail(detail):
+    title = ''
     msg = ''
     if detail.get('imdbid'):
         info = get_info_from_imdb_id(detail['imdbid'])
         if info and info.get('title'):
             detail['title'] = re.sub(r' 第\S{1,3}季', '', info['title'], count=1)
     if detail.get('title'):
-        msg += '：' + detail['title']
+        title = detail['title']
         if detail.get('seasonnumber'):
-            msg = msg + ' S' + detail['seasonnumber'].zfill(2)
+            title += ' S' + detail['seasonnumber'].zfill(2)
         if detail.get('episodenumbers'):
-            msg = msg + 'E' + detail['episodenumbers'].zfill(2)
+            title += 'E' + detail['episodenumbers'].zfill(2)
     if detail.get('quality'):
-        msg += '\n视频质量：' + detail['quality']
+        msg += '视频质量：' + detail['quality']
     if detail.get('size'):
         msg += '\n视频大小：' + HRS(int(detail['size']))
     if detail.get('path'):
@@ -317,7 +318,7 @@ def fill_msg_from_detail(detail):
         msg += '\n删除文件：' + ('是' if 'True' == detail['deletedfiles'] else '否')
     if detail.get('indexer'):
         msg += '\n抓取自：' + detail['indexer']
-    return msg
+    return title, msg
 
 
 class Sonarr:
@@ -347,10 +348,9 @@ class Sonarr:
             'torrent_title': os.environ.get('sonarr_release_title', None),
             'indexer': os.environ.get('sonarr_release_indexer', None),
         }
-        msg = '开始下载' + fill_msg_from_detail(detail)
+        title, msg = fill_msg_from_detail(detail)
         url = get_file_url(detail['id'], self.type)
-        wecom_app('Sonarr抓取通知', msg, url)
-
+        wecom_app('开始下载：' + title, msg, url)
         print("Grab")
 
     def download(self):
@@ -363,10 +363,9 @@ class Sonarr:
             'quality': os.environ.get('sonarr_episodefile_quality', None),
             'isupgrade': os.environ.get('sonarr_isupgrade', None),
         }
-        msg = '下载完成' + fill_msg_from_detail(detail)
+        title, msg = fill_msg_from_detail(detail)
         url = get_file_url(detail['id'], self.type)
-        wecom_app('Sonarr下载通知', msg, url)
-
+        wecom_app('下载完成：' + title, msg, url)
         print("Download")
 
     def rename(self):
@@ -390,9 +389,9 @@ class Sonarr:
             'quality': os.environ.get('sonarr_episodefile_quality', None),
             'path': os.environ.get('sonarr_episodefile_path', None),
         }
-        msg = '文件已删除' + fill_msg_from_detail(detail)
+        title, msg = fill_msg_from_detail(detail)
         url = get_file_url(detail['id'], self.type)
-        wecom_app('Sonarr删除通知', msg, url)
+        wecom_app('文件已删除：' + title, msg, url)
         print("EpisodeDeleted")
 
     def series_deleted(self):
@@ -403,10 +402,9 @@ class Sonarr:
             'path': os.environ.get('sonarr_series_path', None),
             'deletedfiles': os.environ.get('sonarr_series_deletedfiles', None),  # True or False
         }
-
-        msg = '剧集已删除' + fill_msg_from_detail(detail)
+        title, msg = fill_msg_from_detail(detail)
         url = get_file_url(detail['id'], self.type)
-        wecom_app('Sonarr删除通知', msg, url)
+        wecom_app('剧集已删除：' + title, msg, url)
         print("SeriesDeleted")
 
     def health_issue(self):
@@ -465,10 +463,9 @@ class Radarr:
             'size': os.environ.get('radarr_release_size', None),
             'indexer': os.environ.get('radarr_release_indexer', None),
         }
-        msg = '开始下载' + fill_msg_from_detail(detail)
+        title, msg = fill_msg_from_detail(detail)
         url = get_file_url(detail['id'], self.type)
-        wecom_app('Radarr抓取通知', msg, url)
-
+        wecom_app('开始下载：' + title, msg, url)
         print("Grab")
 
     def download(self):
@@ -478,9 +475,9 @@ class Radarr:
             'imdbid': os.environ.get('radarr_movie_imdbid', None),
             'quality': os.environ.get('radarr_moviefile_quality', None),
         }
-        msg = '下载完成' + fill_msg_from_detail(detail)
+        title, msg = fill_msg_from_detail(detail)
         url = get_file_url(detail['id'], self.type)
-        wecom_app('Radarr下载通知', msg, url)
+        wecom_app('下载完成：' + title, msg, url)
 
         print("Download")
 
