@@ -29,5 +29,8 @@
 # 效果展示
 ![basic](https://gitee.com/oscar1011/raw/raw/master/20220225171813.png)
 
+# 开源许可
+本项目使用 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/) 作为开源许可证。
+
 # 赞助支持
 ![basic](https://gitee.com/oscar1011/raw/raw/master/20220224162639.png)
