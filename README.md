@@ -1,6 +1,6 @@
 ## 使用说明
 
-现已更新docker webhook 版通知，可前往 https://github.com/Oscar1011/EasyXarr 配置使用
+现已更新docker webhook 版通知，可前往 https://github.com/Oscar1011/EasyXarr/tree/notify_only 配置使用
 
 #### 下载仓库文件到本地或者使用以下命令：
 
